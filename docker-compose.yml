@@ -1,25 +1,24 @@
-version: "3.7"
+version: '3.7'
 
 services:
-  app:
-    image: php:7.4-apache
+  php:
+    build: .
     ports:
-      - 3000:3000
+      - 80:80
+    volumes: 
+      - ./src:/var/www/html/
+  db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
     volumes:
-      - ./app:/app
+      - test-mysql-data:/var/lib/mysql
     environment:
-      MYSQL_HOST: mysql
-      MYSQL_USER: root
-      MYSQL_PASSWORD: secret
-      MYSQL_DB: todos
+      MYSQL_ROOT_PASSWORD: example
 
-  mysql:
-    image: mysql:5.7
-    volumes:
-      - todo-mysql-data:/var/lib/mysql
-    environment: 
-      MYSQL_ROOT_PASSWORD: secret
-      MYSQL_DATABASE: todos
+  adminer:
+    image: adminer
+    ports:
+      - 8080:8080
 
 volumes:
-  todo-mysql-data:
+  test-mysql-data:
