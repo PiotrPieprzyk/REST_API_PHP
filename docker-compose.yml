@@ -4,7 +4,7 @@ services:
   php:
     build: .
     ports:
-      - 80:80
+      - 90:80
     volumes: 
       - ./src:/var/www/html/
   db:
@@ -14,11 +14,16 @@ services:
       - test-mysql-data:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: stt_db
+      MYSQL_USER: devuser
+      MYSQL_PASSWORD: example
+    ports:
+      - "9906:3306"
 
   adminer:
     image: adminer
     ports:
-      - 8080:8080
+      - 9090:8080
 
 volumes:
   test-mysql-data:
