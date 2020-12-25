@@ -27,10 +27,13 @@ class Database
 
   public static function getQueryConnection($query)
   {
-    $db = self::getConnection();
-    $result = $db->prepare($query);
-    $result->execute();
-
+    try {
+      $db = self::getConnection();
+      $result = $db->prepare($query);
+      $result->execute();
+    } catch (PDOException $e) {
+      var_dump($e);
+    }
     return $result;
   }
 }
