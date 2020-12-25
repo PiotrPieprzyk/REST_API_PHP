@@ -25,7 +25,7 @@ class Database
     }
   }
 
-  public static function getByQuery($query)
+  public static function getQueryConnection($query)
   {
     $db = self::getConnection();
     $result = $db->prepare($query);

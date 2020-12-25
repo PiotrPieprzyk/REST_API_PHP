@@ -14,6 +14,11 @@ Route::add('/', function () {
 Route::add('/users', function () {
   require_once(__ROOT__. '/objects/User.php');
   User::GET_USERS();
-});
+},'get');
+
+Route::add('/user', function () {
+  require_once(__ROOT__ . '/objects/User.php');
+  User::STORE_USER();
+},'post');
 
 Route::run('/');
