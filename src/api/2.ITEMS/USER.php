@@ -1,7 +1,7 @@
 <?php
-require_once(__ROOT__ . '/config/database.php');
-require_once(__ROOT__ . '/helpers/CRUD_FUNCTIONS/fetchItems.php');
-require_once(__ROOT__ . '/helpers/CRUD_FUNCTIONS/storeItem.php');
+require_once(__ROOT__ . '/3.CONFIG/DATABASE.php');
+require_once(__ROOT__ . '/1.FUNCTIONS/CRUD/FETCH.php');
+require_once(__ROOT__ . '/1.FUNCTIONS/CRUD/STORE.php');
 
 
 class User
