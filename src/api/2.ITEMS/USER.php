@@ -40,12 +40,19 @@ class User
 
   public static function GET_USERS()
   {
-    getItems(self::$TABLE_NAME);
+    
+    $users = getItems(self::$TABLE_NAME);
+
+    sendJSON($users);
   }
 
   public static function GET_USER()
   {
-    getItem(self::$TABLE_NAME);
+    $id = $_GET['id'];
+
+    $user = getItem(self::$TABLE_NAME,$id);
+
+    sendJSON($user);
     /* 
       TODO: GET USER
     */

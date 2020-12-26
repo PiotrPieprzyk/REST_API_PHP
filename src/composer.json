@@ -1,0 +1,8 @@
+{
+    "scripts": {
+        "test": "./vendor/bin/phpunit --testdox api/4.TESTS/"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9"
+    }
+}

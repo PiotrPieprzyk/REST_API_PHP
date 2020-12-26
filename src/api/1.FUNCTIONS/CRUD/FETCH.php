@@ -22,7 +22,7 @@ function fetchItems($response, $HOW_MANY, $PAGE)
   return count($itemsArr) > 0 ? $itemsArr : false;
 }
 
-function sendJSON($data, $ERROR_MESSAGE)
+function sendJSON($data, $ERROR_MESSAGE = "Not find items")
 {
   header("Access-Control-Allow-Origin: *");
   header("Content-Type: application/json; charset=UTF-8");
@@ -39,22 +39,19 @@ function sendJSON($data, $ERROR_MESSAGE)
 }
 
 
-function getItem($tableName, $ERROR_MESSAGE = "No item found.")
+function getItem($tableName, $id)
 {
 
-  $id = $_GET['id'];
   $query = 'SELECT * FROM ' . $tableName . ' WHERE id=' . $id;
   $queryConnection = Database::getQueryConnection($query);
   $items = fetchItem($queryConnection);
-
-  sendJSON($items, $ERROR_MESSAGE);
+  return $items;
 }
 
-function getItems($tableName, $HOW_MANY = 10, $PAGE = 1, $ERROR_MESSAGE = "No items found.")
+function getItems($tableName, $HOW_MANY = 10, $PAGE = 1)
 {
   $query = "SELECT * FROM " . $tableName;
   $queryConnection = Database::getQueryConnection($query);
   $items = fetchItems($queryConnection, $HOW_MANY, $PAGE);
-
-  sendJSON($items, $ERROR_MESSAGE);
+  return $items;
 }

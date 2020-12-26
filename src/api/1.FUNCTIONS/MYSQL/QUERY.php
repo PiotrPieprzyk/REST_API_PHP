@@ -2,6 +2,7 @@
 
 require_once(__ROOT__ . '/3.CONFIG/DATABASE.php');
 
+
 function getQueryArraySQL($arrayValues)
 {
   $queryStart = ' (';
@@ -38,7 +39,7 @@ function getValuesQueryBasedOnSheme($data, $sheme)
 function getColumnsQueryBasedOnSheme($sheme)
 {
 
-  function getColumnName($i)
+  function getColumnNchroame($i)
   {
     return $i['name'] . ' ' . $i['sql'];
   }
