@@ -7,29 +7,28 @@ function login($USER_ID, $PASSWORD)
 {
 
   if ($_SESSION['LOGIN']) {
+    var_dump('Jesteś już zalogowany');
     return;
   }
   
-  $user = getItems(User::$TABLE_NAME, User::$SHEME, 1, 1, array('id' => $USER_ID));
-
-  var_dump($user);
+  $user = getItems(User::$TABLE_NAME, User::$SHEME, 1, 1, array('id' => $USER_ID))[0];
 
   $isCorrectPassword = $user['password'] === $PASSWORD;
 
-
   if ($isCorrectPassword) {
     $_SESSION['LOGIN'] = true;
+    var_dump('Pomyślnie zalogowano');
 
     if ($user['ADMIN']) {
       $_SESSION['ADMIN'] = true;
     }
   }
 
-  var_dump($_SESSION['LOGIN']);
 }
 
 function logOut(){
   if ($_SESSION['LOGIN']) {
     $_SESSION['LOGIN'] = false;
+    var_dump('Pomyślnie wylogowano');
   }
 }
