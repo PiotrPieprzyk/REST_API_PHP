@@ -36,7 +36,6 @@ function sendJSON($data, $ERROR_MESSAGE = "Not find items")
 function getItems($tableName, $sheme, $page, $rowsOfPage, $filter)
 {
   $query = QuerySQL::getItemsQuery($tableName, $sheme, $page, $rowsOfPage, $filter);
-  var_dump($query);
   $queryConnection = Database::getQueryConnection($query);
   $items = fetchItems($queryConnection, $rowsOfPage, $page);
   return $items;
