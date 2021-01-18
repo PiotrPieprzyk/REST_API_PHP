@@ -14,7 +14,12 @@ function mymapper($arrayparam, $valuecallback)
 function getValuesWithQuoteMarks($array)
 {
   $arrayWithQuoteMarks = array_map(function ($item) {
+    $valueIsNull = $item === 'NULL';
+    if ($valueIsNull) {
+      return $item;
+    }
     $valueWithQuoteMarks = gettype($item) === 'string' ? "'" . $item . "'" : $item;
+
     return $valueWithQuoteMarks;
   }, $array);
 
@@ -22,13 +27,25 @@ function getValuesWithQuoteMarks($array)
 }
 
 
-function getValuesQueryBasedOnSheme($data, $sheme)
+function getValuesBasedOnSheme($data, $sheme, $passStringNullIfNull)
 {
   $values = array();
   foreach ($sheme as $properties) {
-    $singleData = $data[$properties['name']];
-    $value = $singleData ? "'" . $singleData . "'" : 'NULL';
-    $values[$properties['name']] = $value;
+    if ($properties['name'] === 'id') {
+      if ($passStringNullIfNull) {
+        $values[$properties['name']] = 'NULL';
+      }
+    } else {
+      $singleData = $data[$properties['name']];
+      $value = $singleData ? $singleData : 'NULL';
+      if ($value === 'NULL') {
+        if ($passStringNullIfNull) {
+          $values[$properties['name']] = $value;
+        }
+      } else {
+        $values[$properties['name']] = $value;
+      }
+    }
   }
 
   return $values;
@@ -43,14 +60,13 @@ function getColumnsQuery($sheme)
   return $columns;
 }
 
-function getValuesQuery($data){
-  $arrayWithQuoteMarks = getValuesWithQuoteMarks($data);
-  array_unshift($arrayWithQuoteMarks, 'NULL');
-  return implode(', ', $arrayWithQuoteMarks);
-}
 
-function getSetArraySQL($data, $sheme){
-  $arrayWithQuoteMarks = getValuesWithQuoteMarks($data);
+function getSetArraySQL($data, $sheme)
+{
+  $onlyDataPassingToSheme = getValuesBasedOnSheme($data, $sheme, false);
+  unset($onlyDataPassingToSheme['id']);
+
+  $arrayWithQuoteMarks = getValuesWithQuoteMarks($onlyDataPassingToSheme);
 
   $implodedArray = mymapper($arrayWithQuoteMarks, function ($key, $value) {
     return $key . '=' . $value;
@@ -79,7 +95,7 @@ function getFilterQuery($data)
 function getPagination($page, $rowsOfPage)
 {
   $offset = ($page - 1) * $rowsOfPage;
-  return ' OFFSET ' . $offset . ' ROWS FETCH NEXT ' . $rowsOfPage . ' ROWS ONLY';
+  return ' ORDER BY id LIMIT ' . $offset . ', ' . $rowsOfPage;
 }
 
 
@@ -100,7 +116,10 @@ class QuerySQL
 
   public static function getStoreItemQuery($tableName, $sheme, $data)
   {
-    $query = 'INSERT INTO '  . $tableName . ' VALUES (' . getValuesQuery($data) . ') ';
+    $valuesBasedOnSheme = getValuesBasedOnSheme($data, $sheme, true);
+    $valuesWithQuoteMarks = getValuesWithQuoteMarks($valuesBasedOnSheme);
+    $values = implode(', ', $valuesWithQuoteMarks);
+    $query = 'INSERT INTO '  . $tableName . ' VALUES (' . $values . ') ';
 
     return $query;
   }
@@ -130,6 +149,7 @@ class QuerySQL
     if ($filterQuery) {
       $query = 'UPDATE ' . $tableName . $setQuery . $filterQuery;
     }
+
     return $query;
   }
 }

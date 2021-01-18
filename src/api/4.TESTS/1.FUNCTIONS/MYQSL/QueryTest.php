@@ -139,7 +139,7 @@ final class QueryTest extends TestCase
         1,
         10,
         null,
-        "SELECT * FROM users OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY"
+        "SELECT * FROM users ORDER BY id LIMIT 0, 10"
       ],
       'page=2 rowsOfPage=50' => [
         $this->exampleUserProvider['tableName'],
@@ -147,7 +147,7 @@ final class QueryTest extends TestCase
         2,
         50,
         null,
-        "SELECT * FROM users OFFSET 50 ROWS FETCH NEXT 50 ROWS ONLY"
+        "SELECT * FROM users ORDER BY id LIMIT 50, 50"
       ],
       'filter id=1' => [
         $this->exampleUserProvider['tableName'],
@@ -174,7 +174,7 @@ final class QueryTest extends TestCase
   public function editItemProvider()
   {
     return [
-      'users tableName, sheme, filter, and data return UPDATE  * FROM {tableName} OFFSET {page} ROWS FETCH NEXT {rowsOfPage} ROWS ONLY' => [
+      'users tableName, sheme, filter, and data return UPDATE users SET {data} {filter}' => [
         $this->exampleUserProvider['tableName'],
         $this->exampleUserProvider['sheme'],
         array(

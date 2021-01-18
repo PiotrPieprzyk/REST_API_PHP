@@ -56,6 +56,10 @@ if ($_SESSION['LOGIN']) {
     User::GET_USERS();
   }, 'get');
 
+  Route::add('/user/edit', function () {
+    User::EDIT_USER();
+  }, 'post');
+
   Route::add('/user', function () {
     User::DELETE_USER();
   }, 'delete');

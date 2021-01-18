@@ -1,6 +1,6 @@
 <?php
 require_once(__ROOT__ . '/3.CONFIG/DATABASE.php');
-
+require_once(__ROOT__ . '/1.FUNCTIONS/CRUD/FETCH.php');
 require_once(__ROOT__ . '/1.FUNCTIONS/MYSQL/QUERY.php');
 
 
@@ -59,7 +59,7 @@ class User
 
   public static function STORE_USER()
   {
-    $query = QuerySQL::getStoreItemQuery($_REQUEST, self::$SHEME, self::$TABLE_NAME);
+    $query = QuerySQL::getStoreItemQuery(self::$TABLE_NAME, self::$SHEME, $_REQUEST );
     Database::getQueryConnection($query);
   }
 
