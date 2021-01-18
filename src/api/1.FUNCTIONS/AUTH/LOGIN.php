@@ -1,6 +1,7 @@
 <?php
 
 require_once(__ROOT__ . '/1.FUNCTIONS/CRUD/FETCH.php');
+require_once(__ROOT__ . '/2.ITEMS/USER.php');
 
 function login($USER_ID, $PASSWORD)
 {
@@ -8,12 +9,13 @@ function login($USER_ID, $PASSWORD)
   if ($_SESSION['LOGIN']) {
     return;
   }
+  
+  $user = getItems(User::$TABLE_NAME, User::$SHEME, 1, 1, array('id' => $USER_ID));
 
-  $user = getItem("users", $USER_ID);
+  var_dump($user);
 
   $isCorrectPassword = $user['password'] === $PASSWORD;
 
-  var_dump($isCorrectPassword);
 
   if ($isCorrectPassword) {
     $_SESSION['LOGIN'] = true;

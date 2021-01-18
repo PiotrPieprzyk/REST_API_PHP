@@ -2,12 +2,7 @@
 
 require_once(__ROOT__ . '/3.CONFIG/DATABASE.php');
 
-function fetchItem($response)
-{
-  return $response->fetch(PDO::FETCH_ASSOC);
-}
-
-function fetchItems($response, $HOW_MANY, $PAGE)
+function fetchItems($response, $HOW_MANY)
 {
   $itemsArr = array();
 
@@ -38,20 +33,11 @@ function sendJSON($data, $ERROR_MESSAGE = "Not find items")
   }
 }
 
-
-function getItem($tableName, $id)
+function getItems($tableName, $sheme, $page, $rowsOfPage, $filter)
 {
-
-  $query = 'SELECT * FROM ' . $tableName . ' WHERE id=' . $id;
+  $query = QuerySQL::getItemsQuery($tableName, $sheme, $page, $rowsOfPage, $filter);
+  var_dump($query);
   $queryConnection = Database::getQueryConnection($query);
-  $items = fetchItem($queryConnection);
-  return $items;
-}
-
-function getItems($tableName, $HOW_MANY = 10, $PAGE = 1)
-{
-  $query = "SELECT * FROM " . $tableName;
-  $queryConnection = Database::getQueryConnection($query);
-  $items = fetchItems($queryConnection, $HOW_MANY, $PAGE);
+  $items = fetchItems($queryConnection, $rowsOfPage, $page);
   return $items;
 }

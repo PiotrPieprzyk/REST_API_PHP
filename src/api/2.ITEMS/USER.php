@@ -1,9 +1,7 @@
 <?php
 require_once(__ROOT__ . '/3.CONFIG/DATABASE.php');
-require_once(__ROOT__ . '/1.FUNCTIONS/CRUD/FETCH.php');
-require_once(__ROOT__ . '/1.FUNCTIONS/CRUD/STORE.php');
-require_once(__ROOT__ . '/1.FUNCTIONS/CRUD/DELETE.php');
-require_once(__ROOT__ . '/1.FUNCTIONS/MYSQL/CREATE_TABLE.php');
+
+require_once(__ROOT__ . '/1.FUNCTIONS/MYSQL/QUERY.php');
 
 
 
@@ -30,18 +28,22 @@ class User
     ),
   );
 
-  public static function CREATE_TABLE(){
-    CREATE_TABLE(self::$TABLE_NAME,self::$SHEME);
+  public static function CREATE_TABLE()
+  {
+    $query = QuerySQL::getCreateTableQuery(self::$TABLE_NAME, self::$SHEME);
+    Database::getQueryConnection($query);
   }
 
-  public static function DROP_TABLE(){
-    DROP_TABLE(self::$TABLE_NAME);
+  public static function DROP_TABLE()
+  {
+    $query = QuerySQL::getDropTableQuery(self::$TABLE_NAME);
+    Database::getQueryConnection($query);
   }
 
   public static function GET_USERS()
   {
-    
-    $users = getItems(self::$TABLE_NAME);
+
+    $users = getItems(self::$TABLE_NAME, self::$SHEME, 1, 10, NULL);
 
     sendJSON($users);
   }
@@ -50,32 +52,34 @@ class User
   {
     $id = $_GET['id'];
 
-    $user = getItem(self::$TABLE_NAME,$id);
+    $user = getItems(self::$TABLE_NAME, self::$SHEME, 1, 1, array('id' => $id));
 
     sendJSON($user);
-    /* 
-      TODO: GET USER
-    */
   }
 
   public static function STORE_USER()
   {
-    storeItem($_REQUEST, self::$SHEME, self::$TABLE_NAME);
+    $query = QuerySQL::getStoreItemQuery($_REQUEST, self::$SHEME, self::$TABLE_NAME);
+    Database::getQueryConnection($query);
   }
 
   public static function EDIT_USER()
   {
-    /* 
-      TODO: EDIT_USER
-    */
+    $id = $_REQUEST['id'];
+    $query = QuerySQL::getEditItemQuery(self::$TABLE_NAME, self::$SHEME, array('id'=>$id), $_REQUEST);
+    Database::getQueryConnection($query);
   }
 
   public static function DELETE_USER()
   {
-    DELETE_USER(self::$TABLE_NAME);
-    
-    /* 
-      TODO: DELETE_USER
-    */
+    $id = $_GET['id'];
+
+    if ($id) {
+      $query = QuerySQL::getDeleteItemQuery(self::$TABLE_NAME, self::$SHEME, array(
+        'id' => $id,
+      ));
+
+      Database::getQueryConnection($query);
+    }
   }
 }
